@@ -1,5 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Super Converter</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
   <body>
     <div id="root"></div>
   </body>
@@ -35,7 +42,7 @@
           <div>
             <label htmlFor="hours">Hours</label>
             <input
-              value={inverted ? amount : Math.round(amount / 60)}
+              value={inverted ? amount : amount / 60}
               id="hours"
               placeholder="Hours"
               type="number"
@@ -48,10 +55,51 @@
             {inverted ? "Turn back" : "Invert"}
           </button>
         </div>
+        // <div>로 덕지덕지 감싸주는 이유가 jsx는 리턴 시 하나의 요소만 가능하기 때문
       );
     }
     function KmToMiles() {
-      return <h3>KM 2 M</h3>;
+      const [amount, setAmount] = React.useState("0");
+      const [inverted, setInverted] = React.useState(false);
+      const onChange = (event) => {
+        setAmount(event.target.value);
+      };
+      const reset = () => setAmount(0);
+      const onInvert = () => {
+        reset();
+        setInverted((current) => !current);
+      };
+      return (
+        <div>
+          <div>
+            <label htmlFor="km">Km</label>
+            <input
+              id="km"
+              type="number"
+              placeholder="Km"
+              value={inverted ? amount * 1.609 : amount}
+              onChange={onChange}
+              disabled={inverted}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="miles">Miles</label>
+            <input
+              id="miles"
+              type="number"
+              placeholder="Miles"
+              value={inverted ? amount : amount / 1.609}
+              onChange={onChange}
+              disabled={!inverted}
+            />
+          </div>
+          <button onClick={reset}>Reset</button>
+          <button onClick={onInvert}>
+            {inverted ? "Turn back" : "Invert"}
+          </button>
+        </div>
+      );
     }
     function App() {
       const [index, setIndex] = React.useState("xx");
@@ -67,9 +115,11 @@
             <option value="1">Km & Miles</option>
           </select>
           <hr /> {/* 가로줄 */}
-          {index === "xx" ? "Please select your units" : null}
-          {index === "0" ? <MinutesToHours /> : null}
-          {index === "1" ? <KmToMiles /> : null}
+          <p>
+            {index === "xx" ? "Please select your units" : null}
+            {index === "0" ? <MinutesToHours /> : null}
+            {index === "1" ? <KmToMiles /> : null}
+          </p>
         </div>
       );
     }
